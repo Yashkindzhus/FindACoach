@@ -1,25 +1,27 @@
 <template>
-  <base-dialog :show="!!error" title="An error occured" @close="handleError">
-    <p>{{ error }}</p>
-  </base-dialog>
-  <base-dialog :show="isLoading" title="Autenticating" fixed>
-    <base-spinner></base-spinner>
-  </base-dialog>
-  <base-card>
-    <form @submit.prevent="submitForm">
-      <div class="form-control">
-        <label for="email">E-Mail</label>
-        <input type="email" id="email" v-model.trim="email">
-      </div>
-      <div class="form-control">
-        <label for="password">Password</label>
-        <input type="password" id="password" v-model="password">
-      </div>
-      <p v-if="!formIsValid">Please enter valid email and password (must be more than 6 symbols)</p>
-      <base-button>{{ submitButtonCaption }}</base-button>
-      <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
-    </form>
-  </base-card>
+  <div>
+    <base-dialog :show="!!error" title="An error occured" @close="handleError">
+      <p>{{ error }}</p>
+    </base-dialog>
+    <base-dialog :show="isLoading" title="Autenticating" fixed>
+      <base-spinner></base-spinner>
+    </base-dialog>
+    <base-card>
+      <form @submit.prevent="submitForm">
+        <div class="form-control">
+          <label for="email">E-Mail</label>
+          <input type="email" id="email" v-model.trim="email">
+        </div>
+        <div class="form-control">
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="password">
+        </div>
+        <p v-if="!formIsValid">Please enter valid email and password (must be more than 6 symbols)</p>
+        <base-button>{{ submitButtonCaption }}</base-button>
+        <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
+      </form>
+    </base-card>
+  </div>
 </template>
 
 <script>
@@ -72,6 +74,9 @@ export default {
 
       try {
         await this.$store.dispatch(this.mode, actionPayload);
+
+        const redirectUrl = '/' + (this.$route.query.redirect || 'coaches');
+        this.$router.replace(redirectUrl);
       } catch (err) {
         this.error = err.message || 'Failed to authenticate, try later'
       }

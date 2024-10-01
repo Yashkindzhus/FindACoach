@@ -9,9 +9,13 @@ export default {
       areas: data.areas
     };
 
-    const response = await fetch(`https://find-a-coach-5a451-default-rtdb.firebaseio.com/coaches/${userId}.json`, {
-      method: 'PUT',
-      body: JSON.stringify(coachData)
+    const token = context.rootGetters.token;
+
+    const response = await fetch(
+      `https://find-a-coach-5a451-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=${token}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(coachData)
     });
 
     if(!response.ok) {
